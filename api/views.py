@@ -1,9 +1,28 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from api.serializers import PostSerializer
 from api.models import Post
+from django.utils.crypto import get_random_string
+from api.forms import AddPostForm
+
+
+def postview(request):
+    if request.method == "POST":
+        form = AddPostForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            Post.objects.create(
+                choice=data['choice'],
+                post_id=get_random_string(length=6),
+                body=data['body'],
+            )
+            return HttpResponseRedirect('http://localhost:3000/')
+
+    form = AddPostForm()
+
+    return render(request, 'post.html', {"form": form})
 
 
 class PostViewSet(viewsets.ModelViewSet):
