@@ -44,15 +44,21 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(roast, many=True)
         return Response(serializer.data)
 
+    @action(detail=False)
+    def countview(self, request):
+        like_order = Post.objects.all().order_by('-up_votes')
+        serializer = self.get_serializer(like_order, many=True)
+        return Response(serializer.data)
+
     @action(detail=True, methods=['get'])
-    def LikeView(self, request, pk=None):
+    def likeview(self, request, pk=None):
         post = Post.objects.get(post_id=pk)
         post.up_votes += 1
         post.save()
         return Response({'status': 'post liked'})
 
     @action(detail=True, methods=['get'])
-    def DislikeView(self, request, pk=None):
+    def dislikeview(self, request, pk=None):
         post = Post.objects.get(post_id=pk)
         post.down_votes += 1
         post.save()
