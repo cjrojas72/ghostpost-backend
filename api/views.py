@@ -63,3 +63,9 @@ class PostViewSet(viewsets.ModelViewSet):
         post.down_votes += 1
         post.save()
         return Response({'status': 'post disliked'})
+
+    @action(detail=True, methods=['get'])
+    def deleteview(self, request, pk=None):
+        post = Post.objects.get(post_id=pk)
+        post.delete()
+        return Response({'status': 'post deleted'})
