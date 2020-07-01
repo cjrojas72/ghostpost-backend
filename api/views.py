@@ -46,14 +46,14 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def LikeView(self, request, pk=None):
-        post = Post.objects.get(id=pk)
+        post = Post.objects.get(post_id=pk)
         post.up_votes += 1
         post.save()
         return Response({'status': 'post liked'})
 
     @action(detail=True, methods=['get'])
     def DislikeView(self, request, pk=None):
-        post = Post.objects.get(id=pk)
+        post = Post.objects.get(post_id=pk)
         post.down_votes += 1
         post.save()
         return Response({'status': 'post disliked'})
